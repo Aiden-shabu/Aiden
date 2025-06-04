@@ -284,15 +284,18 @@
             var weightedSum = 0;
             var totalDistributed = 0;
             
-            // First pass: calculate weighted sum
+            // First pass: calculate weighted sum (using final rates with penalty)
             for (var i = 0; i < rows.length; i++) {
                 var inputs = rows[i].querySelectorAll('input');
                 var base = parseInt(inputs[0].value) || 0;
                 var penalty = parseInt(inputs[1].value) || 0;
                 var count = parseInt(inputs[2].value) || 0;
                 
+                // Use final rate for weighted sum calculation
+                var finalRate = base * (1 - penalty / 100);
+                
                 totalServers += count;
-                weightedSum += count * (base / 100);
+                weightedSum += count * (finalRate / 100);
             }
             
             // Second pass: calculate individual amounts
@@ -313,7 +316,8 @@
                 var actualPay = 0;
                 
                 if (weightedSum > 0) {
-                    calcAmount = totalTip / weightedSum * (base / 100);
+                    // FIXED: Use final rate (with penalty) for calculation
+                    calcAmount = totalTip / weightedSum * (finalRate / 100);
                     actualPay = Math.floor(calcAmount);
                 }
                 
