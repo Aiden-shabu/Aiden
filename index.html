@@ -61,7 +61,7 @@
         
         .cash-input {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -326,6 +326,10 @@
                         <input type="number" id="bill20" value="0" min="0" oninput="calculateTips()">
                     </div>
                     <div class="bill-group">
+                        <label>$50 Bills</label>
+                        <input type="number" id="bill50" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                    <div class="bill-group">
                         <label>$100 Bills</label>
                         <input type="number" id="bill100" value="0" min="0" oninput="calculateTips()">
                     </div>
@@ -472,10 +476,11 @@
             const bill5 = parseInt(document.getElementById('bill5').value) || 0;
             const bill10 = parseInt(document.getElementById('bill10').value) || 0;
             const bill20 = parseInt(document.getElementById('bill20').value) || 0;
+            const bill50 = parseInt(document.getElementById('bill50').value) || 0;
             const bill100 = parseInt(document.getElementById('bill100').value) || 0;
             
             // Calculate total tips
-            const totalTip = (bill1 * 1) + (bill5 * 5) + (bill10 * 10) + (bill20 * 20) + (bill100 * 100);
+            const totalTip = (bill1 * 1) + (bill5 * 5) + (bill10 * 10) + (bill20 * 20) + (bill50 * 50) + (bill100 * 100);
             document.getElementById('totalTip').textContent = totalTip.toFixed(2);
             
             // Get server data
