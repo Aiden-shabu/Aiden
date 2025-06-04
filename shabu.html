@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shabu Zone Tip Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .cash-input {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .bill-group {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .bill-group:hover {
+            transform: translateY(-2px);
+        }
+        
+        .bill-group label {
+            display: block;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .bill-group input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .bill-group input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+        
+        .total-tip {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .server-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .server-header {
+            font-weight: bold;
+            padding: 15px 10px;
+            background: #34495e;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .server-row {
+            display: contents;
+        }
+        
+        .server-cell {
+            padding: 12px 8px;
+            background: white;
+            border: 1px solid #ddd;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .server-cell input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .percentage-cell {
+            background: #ecf0f1;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .final-percentage {
+            background: #e8f5e8;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .calculated-amount {
+            background: #fff3cd;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .actual-pay {
+            background: #d1ecf1;
+            font-weight: bold;
+            color: #0c5460;
+            font-size: 1rem;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .summary-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .server-grid {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            
+            .server-header, .server-cell {
+                padding: 10px 5px;
+                font-size: 0.8rem;
+            }
+            
+            .cash-input {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍲 Shabu Zone Tip Calculator</h1>
+            <p>Professional tip distribution system</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <div class="section-title">💵 Cash Amount Input</div>
+                <div class="cash-input">
+                    <div class="bill-group">
+                        <label>$1 Bills</label>
+                        <input type="number" id="bill1" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                    <div class="bill-group">
+                        <label>$5 Bills</label>
+                        <input type="number" id="bill5" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                    <div class="bill-group">
+                        <label>$10 Bills</label>
+                        <input type="number" id="bill10" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                    <div class="bill-group">
+                        <label>$20 Bills</label>
+                        <input type="number" id="bill20" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                    <div class="bill-group">
+                        <label>$100 Bills</label>
+                        <input type="number" id="bill100" value="0" min="0" oninput="calculateTips()">
+                    </div>
+                </div>
+                <div class="total-tip">
+                    Total Tips: $<span id="totalTip">0.00</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">👥 Server Distribution</div>
+                <div class="server-grid">
+                    <div class="server-header">Base %</div>
+                    <div class="server-header">Late Penalty %</div>
+                    <div class="server-header">Count</div>
+                    <div class="server-header">Final %</div>
+                    <div class="server-header">Calculated Amount</div>
+                    <div class="server-header">Actual Pay</div>
+                    
+                    <div class="server-row" data-percentage="100">
+                        <div class="server-cell percentage-cell">100%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">100.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="90">
+                        <div class="server-cell percentage-cell">90%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">90.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="80">
+                        <div class="server-cell percentage-cell">80%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">80.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="70">
+                        <div class="server-cell percentage-cell">70%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">70.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="60">
+                        <div class="server-cell percentage-cell">60%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">60.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="50">
+                        <div class="server-cell percentage-cell">50%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">50.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="40">
+                        <div class="server-cell percentage-cell">40%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">40.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                    
+                    <div class="server-row" data-percentage="30">
+                        <div class="server-cell percentage-cell">30%</div>
+                        <div class="server-cell"><input type="number" class="penalty-input" value="0" min="0" max="50" oninput="calculateTips()"></div>
+                        <div class="server-cell"><input type="number" class="count-input" value="0" min="0" oninput="calculateTips()"></div>
+                        <div class="server-cell final-percentage">30.0%</div>
+                        <div class="server-cell calculated-amount">$0.00</div>
+                        <div class="server-cell actual-pay">$0</div>
+                    </div>
+                </div>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Servers</div>
+                        <div class="summary-value" id="totalServers">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Weighted Sum</div>
+                        <div class="summary-value" id="weightedSum">0.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Distributed</div>
+                        <div class="summary-value" id="totalDistributed">$0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Remaining Amount</div>
+                        <div class="summary-value" id="remainingAmount">$0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">100% Bonus Each</div>
+                        <div class="summary-value" id="bonusAmount">$0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">100% Final Amount</div>
+                        <div class="summary-value" id="finalAmount">$0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateTips() {
+            // Get bill counts
+            const bill1 = parseInt(document.getElementById('bill1').value) || 0;
+            const bill5 = parseInt(document.getElementById('bill5').value) || 0;
+            const bill10 = parseInt(document.getElementById('bill10').value) || 0;
+            const bill20 = parseInt(document.getElementById('bill20').value) || 0;
+            const bill100 = parseInt(document.getElementById('bill100').value) || 0;
+            
+            // Calculate total tips
+            const totalTip = (bill1 * 1) + (bill5 * 5) + (bill10 * 10) + (bill20 * 20) + (bill100 * 100);
+            document.getElementById('totalTip').textContent = totalTip.toFixed(2);
+            
+            // Get server data
+            const serverRows = document.querySelectorAll('.server-row');
+            let totalServers = 0;
+            let weightedSum = 0;
+            let totalDistributed = 0;
+            
+            serverRows.forEach(row => {
+                const basePercentage = parseInt(row.dataset.percentage);
+                const penaltyInput = row.querySelector('.penalty-input');
+                const countInput = row.querySelector('.count-input');
+                const finalPercentageCell = row.querySelector('.final-percentage');
+                const calculatedCell = row.querySelector('.calculated-amount');
+                const actualPayCell = row.querySelector('.actual-pay');
+                
+                const penalty = parseInt(penaltyInput.value) || 0;
+                const count = parseInt(countInput.value) || 0;
+                
+                // Calculate final percentage
+                const finalPercentage = basePercentage * (1 - penalty / 100);
+                finalPercentageCell.textContent = finalPercentage.toFixed(1) + '%';
+                
+                // Update totals
+                totalServers += count;
+                weightedSum += count * (basePercentage / 100);
+                
+                // Calculate amounts
+                const baseAmount = weightedSum > 0 ? totalTip / weightedSum * (basePercentage / 100) : 0;
+                const actualPay = Math.floor(baseAmount);
+                
+                calculatedCell.textContent = '$' + baseAmount.toFixed(2);
+                actualPayCell.textContent = '$' + actualPay;
+                
+                totalDistributed += actualPay * count;
+            });
+            
+            // Calculate remaining and bonus
+            const remaining = totalTip - totalDistributed;
+            const count100 = parseInt(document.querySelector('[data-percentage="100"] .count-input').value) || 0;
+            const bonus = count100 > 0 ? Math.floor(remaining / count100) : 0;
+            const finalAmount100 = Math.floor(weightedSum > 0 ? totalTip / weightedSum : 0) + bonus;
+            
+            // Update summary
+            document.getElementById('totalServers').textContent = totalServers;
+            document.getElementById('weightedSum').textContent = weightedSum.toFixed(2);
+            document.getElementById('totalDistributed').textContent = '$' + totalDistributed;
+            document.getElementById('remainingAmount').textContent = '$' + remaining.toFixed(2);
+            document.getElementById('bonusAmount').textContent = '$' + bonus;
+            document.getElementById('finalAmount').textContent = '$' + finalAmount100;
+        }
+        
+        // Initialize
+        calculateTips();
+    </script>
+</body>
+</html>
