@@ -180,7 +180,6 @@
             box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
         }
         
-        /* 반응형 */
         @media (max-width: 768px) {
             .container { padding: 20px; }
             h1 { font-size: 2rem; }
@@ -204,27 +203,27 @@
             <div class="bills">
                 <div class="bill">
                     <label>$1 Bills</label><br>
-                    <input type="number" id="bill1" value="0" onchange="calculate()">
+                    <input type="number" id="bill1" value="0" oninput="calculate()">
                 </div>
                 <div class="bill">
                     <label>$5 Bills</label><br>
-                    <input type="number" id="bill5" value="0" onchange="calculate()">
+                    <input type="number" id="bill5" value="0" oninput="calculate()">
                 </div>
                 <div class="bill">
                     <label>$10 Bills</label><br>
-                    <input type="number" id="bill10" value="0" onchange="calculate()">
+                    <input type="number" id="bill10" value="0" oninput="calculate()">
                 </div>
                 <div class="bill">
                     <label>$20 Bills</label><br>
-                    <input type="number" id="bill20" value="0" onchange="calculate()">
+                    <input type="number" id="bill20" value="0" oninput="calculate()">
                 </div>
                 <div class="bill">
                     <label>$50 Bills</label><br>
-                    <input type="number" id="bill50" value="0" onchange="calculate()">
+                    <input type="number" id="bill50" value="0" oninput="calculate()">
                 </div>
                 <div class="bill">
                     <label>$100 Bills</label><br>
-                    <input type="number" id="bill100" value="0" onchange="calculate()">
+                    <input type="number" id="bill100" value="0" oninput="calculate()">
                 </div>
             </div>
             <div class="total">Total Tips: $<span id="totalTip">0.00</span></div>
@@ -236,15 +235,15 @@
                 <div class="server-row">
                     <div>
                         <label>Base %</label><br>
-                        <input type="number" value="100" onchange="calculate()">
+                        <input type="number" value="100" oninput="calculate()">
                     </div>
                     <div>
                         <label>Late %</label><br>
-                        <input type="number" value="0" onchange="calculate()">
+                        <input type="number" value="0" oninput="calculate()">
                     </div>
                     <div>
                         <label>Count</label><br>
-                        <input type="number" value="0" onchange="calculate()">
+                        <input type="number" value="0" oninput="calculate()">
                     </div>
                     <div>
                         <label>Final %</label><br>
@@ -267,7 +266,7 @@
 
     <script>
         function calculate() {
-            // Get bills
+            // Get bill counts
             var bill1 = parseInt(document.getElementById('bill1').value) || 0;
             var bill5 = parseInt(document.getElementById('bill5').value) || 0;
             var bill10 = parseInt(document.getElementById('bill10').value) || 0;
@@ -279,7 +278,7 @@
             var totalTip = bill1 + bill5*5 + bill10*10 + bill20*20 + bill50*50 + bill100*100;
             document.getElementById('totalTip').textContent = totalTip.toFixed(2);
             
-            // Calculate servers - FIXED VERSION
+            // Get all server rows
             var rows = document.querySelectorAll('.server-row');
             var totalServers = 0;
             var weightedSum = 0;
@@ -314,646 +313,29 @@
                 var actualPay = 0;
                 
                 if (weightedSum > 0) {
-                    // Correct formula: total / weighted_sum * base_percentage
                     calcAmount = totalTip / weightedSum * (base / 100);
                     actualPay = Math.floor(calcAmount);
                 }
                 
-                results[1].textContent = '
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + calcAmount.toFixed(2);
-                results[2].textContent = '
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + actualPay;
+                results[1].textContent = '$' + calcAmount.toFixed(2);
+                results[2].textContent = '$' + actualPay;
                 
                 totalDistributed += actualPay * count;
             }
             
-            // Calculate remaining amount
-            var remaining = totalTip - totalDistributed;
-            
-            // Show summary (optional)
-            console.log('Debug Info:');
-            console.log('Total Tip: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + totalTip);
+            // Debug info
+            console.log('Total Tip: $' + totalTip);
             console.log('Total Servers: ' + totalServers);
             console.log('Weighted Sum: ' + weightedSum.toFixed(2));
-            console.log('Total Distributed: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + totalDistributed);
-            console.log('Remaining: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + remaining.toFixed(2));
+            console.log('Total Distributed: $' + totalDistributed);
+            console.log('Remaining: $' + (totalTip - totalDistributed).toFixed(2));
         }
         
         function addRow() {
             var container = document.getElementById('serverContainer');
             var newRow = document.createElement('div');
             newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-    <title>Shabu Zone Tip Calculator</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container { 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            background: white; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        h1 { 
-            text-align: center; 
-            color: #2c3e50; 
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-        .section { 
-            margin: 30px 0; 
-            padding: 25px; 
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px; 
-            border-left: 5px solid #3498db;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        .section h3 {
-            color: #2c3e50;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .bills { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 15px; 
-        }
-        .bill { 
-            text-align: center; 
-            padding: 20px; 
-            background: white;
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .bill:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .bill label {
-            display: block;
-            font-weight: bold;
-            color: #34495e;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-        .bill input { 
-            width: 70px; 
-            padding: 12px; 
-            text-align: center; 
-            font-size: 16px; 
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            transition: border-color 0.3s ease;
-        }
-        .bill input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-        .total { 
-            text-align: center; 
-            font-size: 2rem; 
-            font-weight: bold; 
-            color: #27ae60; 
-            margin: 25px 0; 
-            padding: 20px;
-            background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%);
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
-        }
-        .server-row { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr; 
-            gap: 15px; 
-            margin: 15px 0; 
-            padding: 20px; 
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-left: 4px solid #e74c3c;
-            transition: transform 0.2s ease;
-        }
-        .server-row:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        .server-row > div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .server-row label {
-            font-weight: bold;
-            color: #34495e;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        .server-row input { 
-            width: 80px; 
-            padding: 10px; 
-            text-align: center; 
-            border: 2px solid #e9ecef;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-        .server-row input:focus {
-            outline: none;
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
-        }
-        .result { 
-            padding: 10px; 
-            border-radius: 8px; 
-            text-align: center; 
-            font-weight: bold;
-            font-size: 0.95rem;
-            min-width: 80px;
-        }
-        .final { background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%); color: #27ae60; }
-        .calc { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #8b6914; }
-        .pay { background: linear-gradient(135deg, #cce7ff 0%, #a8d8ea 100%); color: #2980b9; }
-        
-        button { 
-            font-size: 16px; 
-            cursor: pointer; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .add-btn { 
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); 
-            color: white; 
-            margin: 20px 0; 
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-        .add-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-        }
-        .remove-btn { 
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); 
-            color: white; 
-            font-size: 12px; 
-            padding: 8px 12px; 
-            margin-top: 8px;
-            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
-        }
-        .remove-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
-        }
-        
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .container { padding: 20px; }
-            h1 { font-size: 2rem; }
-            .bills { grid-template-columns: repeat(2, 1fr); }
-            .server-row { 
-                grid-template-columns: 1fr; 
-                gap: 10px; 
-                text-align: center;
-            }
-            .server-row > div { margin-bottom: 10px; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🍲 Shabu Zone Tip Calculator</h1>
-        <p class="subtitle">Professional tip distribution system</p>
-        
-        <div class="section">
-            <h3>💵 Cash Amount Input</h3>
-            <div class="bills">
-                <div class="bill">
-                    <label>$1 Bills</label><br>
-                    <input type="number" id="bill1" value="0" onchange="calculate()">
-                </div>
-                <div class="bill">
-                    <label>$5 Bills</label><br>
-                    <input type="number" id="bill5" value="0" onchange="calculate()">
-                </div>
-                <div class="bill">
-                    <label>$10 Bills</label><br>
-                    <input type="number" id="bill10" value="0" onchange="calculate()">
-                </div>
-                <div class="bill">
-                    <label>$20 Bills</label><br>
-                    <input type="number" id="bill20" value="0" onchange="calculate()">
-                </div>
-                <div class="bill">
-                    <label>$50 Bills</label><br>
-                    <input type="number" id="bill50" value="0" onchange="calculate()">
-                </div>
-                <div class="bill">
-                    <label>$100 Bills</label><br>
-                    <input type="number" id="bill100" value="0" onchange="calculate()">
-                </div>
-            </div>
-            <div class="total">Total Tips: $<span id="totalTip">0.00</span></div>
-        </div>
-
-        <div class="section">
-            <h3>👥 Server Distribution</h3>
-            <div id="serverContainer">
-                <div class="server-row">
-                    <div>
-                        <label>Base %</label><br>
-                        <input type="number" value="100" onchange="calculate()">
-                    </div>
-                    <div>
-                        <label>Late %</label><br>
-                        <input type="number" value="0" onchange="calculate()">
-                    </div>
-                    <div>
-                        <label>Count</label><br>
-                        <input type="number" value="0" onchange="calculate()">
-                    </div>
-                    <div>
-                        <label>Final %</label><br>
-                        <div class="result final">100.0%</div>
-                    </div>
-                    <div>
-                        <label>Calculated</label><br>
-                        <div class="result calc">$0.00</div>
-                    </div>
-                    <div>
-                        <label>Actual Pay</label><br>
-                        <div class="result pay">$0</div>
-                        <button class="remove-btn" onclick="removeRow(this)">Remove</button>
-                    </div>
-                </div>
-            </div>
-            <button class="add-btn" onclick="addRow()">+ Add Server Group</button>
-        </div>
-    </div>
-
-    <script>
-        function calculate() {
-            // Get bills
-            var bill1 = parseInt(document.getElementById('bill1').value) || 0;
-            var bill5 = parseInt(document.getElementById('bill5').value) || 0;
-            var bill10 = parseInt(document.getElementById('bill10').value) || 0;
-            var bill20 = parseInt(document.getElementById('bill20').value) || 0;
-            var bill50 = parseInt(document.getElementById('bill50').value) || 0;
-            var bill100 = parseInt(document.getElementById('bill100').value) || 0;
-            
-            // Calculate total
-            var totalTip = bill1 + bill5*5 + bill10*10 + bill20*20 + bill50*50 + bill100*100;
-            document.getElementById('totalTip').textContent = totalTip.toFixed(2);
-            
-            // Calculate servers - FIXED VERSION
-            var rows = document.querySelectorAll('.server-row');
-            var totalServers = 0;
-            var weightedSum = 0;
-            var totalDistributed = 0;
-            
-            // First pass: calculate weighted sum
-            for (var i = 0; i < rows.length; i++) {
-                var inputs = rows[i].querySelectorAll('input');
-                var base = parseInt(inputs[0].value) || 0;
-                var penalty = parseInt(inputs[1].value) || 0;
-                var count = parseInt(inputs[2].value) || 0;
-                
-                totalServers += count;
-                weightedSum += count * (base / 100);
-            }
-            
-            // Second pass: calculate individual amounts
-            for (var i = 0; i < rows.length; i++) {
-                var inputs = rows[i].querySelectorAll('input');
-                var results = rows[i].querySelectorAll('.result');
-                
-                var base = parseInt(inputs[0].value) || 0;
-                var penalty = parseInt(inputs[1].value) || 0;
-                var count = parseInt(inputs[2].value) || 0;
-                
-                // Calculate final rate (with penalty)
-                var finalRate = base * (1 - penalty / 100);
-                results[0].textContent = finalRate.toFixed(1) + '%';
-                
-                // Calculate amount per person
-                var calcAmount = 0;
-                var actualPay = 0;
-                
-                if (weightedSum > 0) {
-                    // Correct formula: total / weighted_sum * base_percentage
-                    calcAmount = totalTip / weightedSum * (base / 100);
-                    actualPay = Math.floor(calcAmount);
-                }
-                
-                results[1].textContent = '
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + calcAmount.toFixed(2);
-                results[2].textContent = '
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + actualPay;
-                
-                totalDistributed += actualPay * count;
-            }
-            
-            // Calculate remaining amount
-            var remaining = totalTip - totalDistributed;
-            
-            // Show summary (optional)
-            console.log('Debug Info:');
-            console.log('Total Tip: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + totalTip);
-            console.log('Total Servers: ' + totalServers);
-            console.log('Weighted Sum: ' + weightedSum.toFixed(2));
-            console.log('Total Distributed: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + totalDistributed);
-            console.log('Remaining: 
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
-            container.appendChild(newRow);
-            calculate();
-        }
-        
-        function removeRow(btn) {
-            var rows = document.querySelectorAll('.server-row');
-            if (rows.length > 1) {
-                btn.closest('.server-row').remove();
-                calculate();
-            } else {
-                alert('At least one server group is required!');
-            }
-        }
-        
-        // Initial calculation
-        calculate();
-    </script>
-</body>
-</html> + remaining.toFixed(2));
-        }
-        
-        function addRow() {
-            var container = document.getElementById('serverContainer');
-            var newRow = document.createElement('div');
-            newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" onchange="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Count</label><br><input type="number" value="0" onchange="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
+            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" oninput="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" oninput="calculate()"></div><div><label>Count</label><br><input type="number" value="0" oninput="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
             container.appendChild(newRow);
             calculate();
         }
