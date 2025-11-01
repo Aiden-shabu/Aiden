@@ -236,11 +236,27 @@
             h1 { font-size: 2rem; }
             .bills { grid-template-columns: repeat(2, 1fr); }
             .server-row { 
-                grid-template-columns: 1fr; 
-                gap: 10px; 
-                text-align: center;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 8px;
+                padding: 15px;
             }
-            .server-row > div { margin-bottom: 10px; }
+            .server-row label {
+                font-size: 0.75rem;
+            }
+            .server-row input {
+                width: 100%;
+                padding: 8px;
+                font-size: 12px;
+            }
+            .clickable-percent {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            .result {
+                padding: 8px;
+                font-size: 0.8rem;
+                min-width: auto;
+            }
             .summary-box { grid-template-columns: 1fr; }
         }
     </style>
