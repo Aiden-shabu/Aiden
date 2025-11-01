@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shabu Zone Tip Calculator</title>
     <style>
         body { 
@@ -94,6 +95,32 @@
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
         }
+        .summary-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .summary-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .extra-money {
+            color: #e74c3c;
+        }
         .server-row { 
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr; 
@@ -146,7 +173,28 @@
         .final { background: linear-gradient(135deg, #d5f4e6 0%, #a8e6cf 100%); color: #27ae60; }
         .calc { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #8b6914; }
         .pay { background: linear-gradient(135deg, #cce7ff 0%, #a8d8ea 100%); color: #2980b9; }
-        
+
+        .clickable-percent {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            border: 2px solid #3498db;
+            background: white;
+            color: #2c3e50;
+        }
+        .clickable-percent:hover {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+        .clickable-percent:active {
+            transform: scale(0.98);
+        }
+
         button { 
             font-size: 16px; 
             cursor: pointer; 
@@ -162,6 +210,7 @@
             padding: 15px 30px;
             font-size: 1.1rem;
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+            width: 100%;
         }
         .add-btn:hover {
             transform: translateY(-2px);
@@ -179,7 +228,7 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
         }
-        
+
         @media (max-width: 768px) {
             .container { padding: 20px; }
             h1 { font-size: 2rem; }
@@ -190,6 +239,7 @@
                 text-align: center;
             }
             .server-row > div { margin-bottom: 10px; }
+            .summary-box { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -197,7 +247,7 @@
     <div class="container">
         <h1>🍲 Shabu Zone Tip Calculator</h1>
         <p class="subtitle">Professional tip distribution system</p>
-        
+
         <div class="section">
             <h3>💵 Cash Amount Input</h3>
             <div class="bills">
@@ -227,6 +277,16 @@
                 </div>
             </div>
             <div class="total">Total Tips: $<span id="totalTip">0.00</span></div>
+            <div class="summary-box">
+                <div class="summary-item">
+                    <div class="summary-label">Total Servers</div>
+                    <div class="summary-value" id="totalServers">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Extra Money</div>
+                    <div class="summary-value extra-money">$<span id="extraMoney">0</span></div>
+                </div>
+            </div>
         </div>
 
         <div class="section">
@@ -235,11 +295,11 @@
                 <div class="server-row">
                     <div>
                         <label>Base %</label><br>
-                        <input type="number" value="100" oninput="calculate()">
+                        <div class="clickable-percent" onclick="cycleBase(this)">100%</div>
                     </div>
                     <div>
                         <label>Late %</label><br>
-                        <input type="number" value="0" oninput="calculate()">
+                        <div class="clickable-percent" onclick="cycleLate(this)">0%</div>
                     </div>
                     <div>
                         <label>Count</label><br>
@@ -265,6 +325,25 @@
     </div>
 
     <script>
+        const BASE_PERCENTAGES = [100, 80, 70, 60, 50];
+        const LATE_PERCENTAGES = [0, 3, 5, 10, 15, 20];
+
+        function cycleBase(element) {
+            const currentValue = parseInt(element.textContent);
+            const currentIndex = BASE_PERCENTAGES.indexOf(currentValue);
+            const nextIndex = (currentIndex + 1) % BASE_PERCENTAGES.length;
+            element.textContent = BASE_PERCENTAGES[nextIndex] + '%';
+            calculate();
+        }
+
+        function cycleLate(element) {
+            const currentValue = parseInt(element.textContent);
+            const currentIndex = LATE_PERCENTAGES.indexOf(currentValue);
+            const nextIndex = (currentIndex + 1) % LATE_PERCENTAGES.length;
+            element.textContent = LATE_PERCENTAGES[nextIndex] + '%';
+            calculate();
+        }
+
         function calculate() {
             // Get bill counts
             var bill1 = parseInt(document.getElementById('bill1').value) || 0;
@@ -273,77 +352,82 @@
             var bill20 = parseInt(document.getElementById('bill20').value) || 0;
             var bill50 = parseInt(document.getElementById('bill50').value) || 0;
             var bill100 = parseInt(document.getElementById('bill100').value) || 0;
-            
+
             // Calculate total
             var totalTip = bill1 + bill5*5 + bill10*10 + bill20*20 + bill50*50 + bill100*100;
             document.getElementById('totalTip').textContent = totalTip.toFixed(2);
-            
+
             // Get all server rows
             var rows = document.querySelectorAll('.server-row');
             var totalServers = 0;
             var weightedSum = 0;
             var totalDistributed = 0;
-            
-            // First pass: calculate weighted sum (using final rates with penalty)
+
+            // First pass: calculate weighted sum and total servers
             for (var i = 0; i < rows.length; i++) {
-                var inputs = rows[i].querySelectorAll('input');
-                var base = parseInt(inputs[0].value) || 0;
-                var penalty = parseInt(inputs[1].value) || 0;
-                var count = parseInt(inputs[2].value) || 0;
-                
-                // Use final rate for weighted sum calculation
-                var finalRate = base * (1 - penalty / 100);
+                var basePercent = parseInt(rows[i].querySelector('.clickable-percent').textContent);
+                var latePercent = parseInt(rows[i].querySelectorAll('.clickable-percent')[1].textContent);
+                var countInput = rows[i].querySelector('input[type="number"]');
+                var count = parseInt(countInput.value) || 0;
+
+                // Calculate final rate (with penalty)
+                var finalRate = basePercent * (1 - latePercent / 100);
                 
                 totalServers += count;
                 weightedSum += count * (finalRate / 100);
             }
-            
+
+            // Update total servers display
+            document.getElementById('totalServers').textContent = totalServers;
+
             // Second pass: calculate individual amounts
             for (var i = 0; i < rows.length; i++) {
-                var inputs = rows[i].querySelectorAll('input');
+                var basePercent = parseInt(rows[i].querySelector('.clickable-percent').textContent);
+                var latePercent = parseInt(rows[i].querySelectorAll('.clickable-percent')[1].textContent);
+                var countInput = rows[i].querySelector('input[type="number"]');
+                var count = parseInt(countInput.value) || 0;
                 var results = rows[i].querySelectorAll('.result');
-                
-                var base = parseInt(inputs[0].value) || 0;
-                var penalty = parseInt(inputs[1].value) || 0;
-                var count = parseInt(inputs[2].value) || 0;
-                
+
                 // Calculate final rate (with penalty)
-                var finalRate = base * (1 - penalty / 100);
+                var finalRate = basePercent * (1 - latePercent / 100);
                 results[0].textContent = finalRate.toFixed(1) + '%';
-                
+
                 // Calculate amount per person
                 var calcAmount = 0;
                 var actualPay = 0;
-                
+
                 if (weightedSum > 0) {
-                    // FIXED: Use final rate (with penalty) for calculation
                     calcAmount = totalTip / weightedSum * (finalRate / 100);
                     actualPay = Math.floor(calcAmount);
                 }
-                
+
                 results[1].textContent = '$' + calcAmount.toFixed(2);
                 results[2].textContent = '$' + actualPay;
-                
+
                 totalDistributed += actualPay * count;
             }
-            
+
+            // Calculate and display extra money
+            var extraMoney = totalTip - totalDistributed;
+            document.getElementById('extraMoney').textContent = extraMoney.toFixed(0);
+
             // Debug info
             console.log('Total Tip: $' + totalTip);
             console.log('Total Servers: ' + totalServers);
             console.log('Weighted Sum: ' + weightedSum.toFixed(2));
             console.log('Total Distributed: $' + totalDistributed);
-            console.log('Remaining: $' + (totalTip - totalDistributed).toFixed(2));
+            console.log('Extra Money: $' + extraMoney.toFixed(2));
         }
-        
+
         function addRow() {
             var container = document.getElementById('serverContainer');
             var newRow = document.createElement('div');
             newRow.className = 'server-row';
-            newRow.innerHTML = '<div><label>Base %</label><br><input type="number" value="100" oninput="calculate()"></div><div><label>Late %</label><br><input type="number" value="0" oninput="calculate()"></div><div><label>Count</label><br><input type="number" value="0" oninput="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
+            newRow.innerHTML = '<div><label>Base %</label><br><div class="clickable-percent" onclick="cycleBase(this)">100%</div></div><div><label>Late %</label><br><div class="clickable-percent" onclick="cycleLate(this)">0%</div></div><div><label>Count</label><br><input type="number" value="0" oninput="calculate()"></div><div><label>Final %</label><br><div class="result final">100.0%</div></div><div><label>Calculated</label><br><div class="result calc">$0.00</div></div><div><label>Actual Pay</label><br><div class="result pay">$0</div><button class="remove-btn" onclick="removeRow(this)">Remove</button></div>';
             container.appendChild(newRow);
             calculate();
         }
-        
+
         function removeRow(btn) {
             var rows = document.querySelectorAll('.server-row');
             if (rows.length > 1) {
@@ -353,7 +437,7 @@
                 alert('At least one server group is required!');
             }
         }
-        
+
         // Initial calculation
         calculate();
     </script>
