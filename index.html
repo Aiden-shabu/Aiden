@@ -46,6 +46,10 @@
             margin-bottom: 20px;
             font-weight: 600;
         }
+        .server-container-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         .bills { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
@@ -239,6 +243,7 @@
                 grid-template-columns: repeat(6, 1fr);
                 gap: 8px;
                 padding: 15px;
+                min-width: 650px;
             }
             .server-row label {
                 font-size: 0.75rem;
@@ -309,7 +314,8 @@
 
         <div class="section">
             <h3>👥 Server Distribution</h3>
-            <div id="serverContainer">
+            <div class="server-container-wrapper">
+                <div id="serverContainer">
                 <div class="server-row">
                     <div>
                         <label>Base %</label><br>
@@ -336,6 +342,7 @@
                         <div class="result pay">$0</div>
                         <button class="remove-btn" onclick="removeRow(this)">Remove</button>
                     </div>
+                </div>
                 </div>
             </div>
             <button class="add-btn" onclick="addRow()">+ Add Server Group</button>
