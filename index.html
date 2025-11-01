@@ -46,10 +46,6 @@
             margin-bottom: 20px;
             font-weight: 600;
         }
-        .server-container-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
         .bills { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
@@ -236,31 +232,47 @@
         }
 
         @media (max-width: 768px) {
-            .container { padding: 20px; }
-            h1 { font-size: 2rem; }
-            .bills { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 15px; }
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.9rem; }
+            .section { padding: 15px; }
+            .section h3 { font-size: 1.1rem; }
+            .bills { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .bill { padding: 12px; }
+            .bill label { font-size: 0.85rem; }
+            .bill input { width: 50px; padding: 8px; font-size: 14px; }
+            .total { font-size: 1.5rem; padding: 15px; }
+            .summary-label { font-size: 0.75rem; }
+            .summary-value { font-size: 1.3rem; }
             .server-row { 
                 grid-template-columns: repeat(6, 1fr);
-                gap: 8px;
-                padding: 15px;
-                min-width: 650px;
+                gap: 5px;
+                padding: 10px;
             }
             .server-row label {
-                font-size: 0.75rem;
+                font-size: 0.65rem;
             }
             .server-row input {
                 width: 100%;
-                padding: 8px;
+                padding: 6px;
                 font-size: 12px;
             }
             .clickable-percent {
-                padding: 8px 10px;
-                font-size: 0.85rem;
+                padding: 6px 8px;
+                font-size: 0.7rem;
             }
             .result {
-                padding: 8px;
-                font-size: 0.8rem;
+                padding: 6px;
+                font-size: 0.65rem;
                 min-width: auto;
+            }
+            .remove-btn {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+            .add-btn {
+                font-size: 0.95rem;
+                padding: 12px 20px;
             }
             .summary-box { grid-template-columns: 1fr; }
         }
@@ -314,8 +326,7 @@
 
         <div class="section">
             <h3>👥 Server Distribution</h3>
-            <div class="server-container-wrapper">
-                <div id="serverContainer">
+            <div id="serverContainer">
                 <div class="server-row">
                     <div>
                         <label>Base %</label><br>
@@ -342,7 +353,6 @@
                         <div class="result pay">$0</div>
                         <button class="remove-btn" onclick="removeRow(this)">Remove</button>
                     </div>
-                </div>
                 </div>
             </div>
             <button class="add-btn" onclick="addRow()">+ Add Server Group</button>
